@@ -13,12 +13,19 @@ class Analytics(object):
                 break
         return cont * diff[0]
 
-    def moving_average(self, data, days):
+    def moving_average(self, data, days, skipna = True):
         result = []
         data = data[:]
+        if skipna :
+            #filter None
+            data = [value for value in data if value is not None]
         for _ in range(len(data) - days + 1):
-            result.append(round(sum(data[-days:]) / days, 2))
-            data.pop()
+            try:
+                result.append(round(sum(data[-days:]) / days, 2))
+            except TypeError as e:
+                print(e)
+            data.pop()    
+
         return result[::-1]
 
     def ma_bias_ratio(self, day1, day2):
